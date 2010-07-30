@@ -9,9 +9,9 @@ setup(
     version='1.0',
     author='Larry Jones',
     author_email='mrwizard82d2@earthlink.net',
-    packages=['MemorablePwds', 'MemorablePwds.tkui'],
+    packages=['mem_pwds', 'mem_pwds.tkui', 'mem_pwds.textui'],
     package_data={
-        'MemorablePwds': ['etc/*.TXT', 'etc/DICTION.ZIP'],
+        'mem_pwds': ['etc/*.TXT', 'etc/DICTION.ZIP'],
         },
     url='http://www.earthlink.com/mrwizard82d1',
     description='Generate strong but easily memorized passwords.',
