@@ -15,6 +15,7 @@ setup(
         },
     scripts = [
         'bin/cmd_memorable_pwds.py',
+        'bin/tk_memorable_pwds.py',
         ],
     url='http://www.earthlink.com/mrwizard82d1',
     description='Generate strong but easily memorized passwords.',

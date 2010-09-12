@@ -1,10 +1,11 @@
 #! env python
 
-"""Implements (TK) user interface generating strong but easily memorized passwords."""
+"""Generate strong, memorable passwords using the Tcl/Tk interface."""
 
 import os
 import sys
-projectsDir = os.path.join('D:', os.sep, 'Documents', 'Professional', 'Projects')
+projectsDir = os.path.join('D:', os.sep, 'Documents',
+                           'Professional', 'Projects')
 dictDir = os.path.join(projectsDir, 'MemorablePwds')
 pathRoots = [ projectsDir, dictDir ]
 def configPythonPath(roots=pathRoots):
@@ -15,12 +16,13 @@ configPythonPath()
 
 import pp2e_laj.gui.tools.guimixin
 import pp2e_laj.gui.tools.guimaker
-import MemorablePwds.MemorablePwds
+import mem_pwds.MemorablePwds
 
 from Tkinter import *
 from ScrolledText import ScrolledText
 
-class MemorablePwdsApp(pp2e_laj.gui.tools.guimixin.GuiMixin, pp2e_laj.gui.tools.guimaker.GuiMakerWindowMenu):
+class MemorablePwdsApp(pp2e_laj.gui.tools.guimixin.GuiMixin,
+                       pp2e_laj.gui.tools.guimaker.GuiMakerWindowMenu):
     """(Tkinter) User interface for memorable passwords application."""
 
     def clear(self):
@@ -41,7 +43,9 @@ class MemorablePwdsApp(pp2e_laj.gui.tools.guimixin.GuiMixin, pp2e_laj.gui.tools.
         middle = Frame(self)
         middle.pack(expand=YES, fill=BOTH)
 
-        Label(middle, text='Candidate Passwords').grid(row=0, column=0, sticky=NSEW)
+        Label(middle, text='Candidate Passwords').grid(row=0,
+                                                       column=0,
+                                                       sticky=NSEW)
         self.candidatesView = ScrolledText(middle, height=15, width=45)
         self.candidatesView.config(font=('courier', 10, 'normal'))
         self.candidatesView.grid(row=1, column=0, sticky=NSEW)
@@ -60,7 +64,7 @@ class MemorablePwdsApp(pp2e_laj.gui.tools.guimixin.GuiMixin, pp2e_laj.gui.tools.
         """Initialize the menu bar and tool bar of the application."""
 
         self._candidates = []
-        self._generator = MemorablePwds.MemorablePwds.MemorablePwds()
+        self._generator = mem_pwds.MemorablePwds.MemorablePwds()
         self.menuBar = [
             ('File', 0, [('New', 0, self.clear),
                          ('Exit', 0, sys.exit)]),
@@ -71,5 +75,11 @@ class MemorablePwdsApp(pp2e_laj.gui.tools.guimixin.GuiMixin, pp2e_laj.gui.tools.
             ('Clear', self.clear, {'side': LEFT}),
             ]
 
-if __name__ == '__main__':
+
+def main():
+    """Invoke the Tcl/Tk main loop."""
     MemorablePwdsApp().mainloop()
+
+
+if __name__ == '__main__':
+    main()
