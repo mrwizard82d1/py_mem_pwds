@@ -42,7 +42,7 @@ class MemorablePwdsApp(cmd.Cmd):
         if __name__ == '__main__':
             sys.exit()
         else:
-            raise "exit"
+            raise Exception('exit')
         
 
 def doApp():
