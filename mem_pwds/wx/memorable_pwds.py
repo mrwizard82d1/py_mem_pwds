@@ -16,21 +16,42 @@ class Panel(wx.Panel):
         self._generator = mem_pwds.MemorablePwds.MemorablePwds()
 
         # Create the interface.
+        text_window_size = (300, 300)
+        candidate_label = wx.StaticText(self, wx.ID_ANY,
+                                        'Candidate passwords:')
         panel1 = wx.ScrolledWindow(self)
-        candidate_text = wx.TextCtrl(panel1, style=wx.TE_MULTILINE)
-        candidate_text.SetBackgroundColour('red')
-        self.FitInside()
+        self.candidate_text = wx.TextCtrl(panel1, size=text_window_size,
+                                          style=wx.TE_MULTILINE)
+        self.candidate_text.SetBackgroundColour('red')
+
+        try_it_label = wx.StaticText(self, wx.ID_ANY,
+                                     'Try it!')
         panel2 = wx.ScrolledWindow(self)
-        sample_text = wx.TextCtrl(panel2, style=wx.TE_MULTILINE)
-        self.FitInside()
+        sample_text = wx.TextCtrl(panel2, size=text_window_size,
+                                  style=wx.TE_MULTILINE)
         sample_text.SetBackgroundColour('green')
 
         # Layout the interface.
-        sizer = wx.GridSizer(rows=1, cols=2)
-        sizer.Add(panel1, 0, wx.EXPAND)
-        sizer.Add(panel2, 0, wx.EXPAND)
-        self.SetSizer(sizer)
+        candidate_sizer = wx.BoxSizer(wx.VERTICAL)
+        candidate_sizer.Add(candidate_label, 0, flag=wx.EXPAND)
+        candidate_sizer.Add(panel1, 1, flag=wx.EXPAND)
+        
+        try_it_sizer = wx.BoxSizer(wx.VERTICAL)
+        try_it_sizer.Add(try_it_label, 0, flag=wx.EXPAND)
+        try_it_sizer.Add(panel2, 1, flag=wx.EXPAND)
+
+        panel_sizer = wx.GridSizer(rows=1, cols=2)
+        panel_sizer.Add(candidate_sizer, 0, flag=wx.EXPAND)
+        panel_sizer.Add(try_it_sizer, 0, flag=wx.EXPAND)
+        self.SetSizer(panel_sizer)
         self.Fit()
+
+    def add_candidates(self):
+        """Add candidates."""
+        self._candidates.extend([self._generator.next() for
+                                 i in range(8)])
+        self.candidate_text.Clear()
+        self.candidate_text.AppendText('\n'.join(self._candidates))
 
 
 class Frame(wx.Frame):
@@ -82,7 +103,7 @@ class Frame(wx.Frame):
 
     def OnGenerate(self, event):
         """Respond to a generate request."""
-        self._candidates = [self._generator.next() for i in range(8)]
+        self.panel.add_candidates()
 
 
 class App(wx.App):
