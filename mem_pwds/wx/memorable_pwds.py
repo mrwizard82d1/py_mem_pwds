@@ -19,26 +19,28 @@ class Panel(wx.Panel):
         text_window_size = (300, 300)
         candidate_label = wx.StaticText(self, wx.ID_ANY,
                                         'Candidate passwords:')
-        panel1 = wx.ScrolledWindow(self)
-        self.candidate_text = wx.TextCtrl(panel1, size=text_window_size,
+        scroll1 = wx.ScrolledWindow(self, wx.ID_ANY)
+        scroll1.SetScrollbars(1, 1, text_window_size[0], text_window_size[1])
+        self.candidate_text = wx.TextCtrl(scroll1, size=text_window_size,
                                           style=wx.TE_MULTILINE)
         self.candidate_text.SetBackgroundColour('red')
 
         try_it_label = wx.StaticText(self, wx.ID_ANY,
                                      'Try it!')
-        panel2 = wx.ScrolledWindow(self)
-        sample_text = wx.TextCtrl(panel2, size=text_window_size,
+        scroll2 = wx.ScrolledWindow(self)
+        scroll2.SetScrollbars(1, 1, text_window_size[0], text_window_size[1])
+        sample_text = wx.TextCtrl(scroll2, size=text_window_size,
                                   style=wx.TE_MULTILINE)
         sample_text.SetBackgroundColour('green')
 
         # Layout the interface.
         candidate_sizer = wx.BoxSizer(wx.VERTICAL)
         candidate_sizer.Add(candidate_label, 0, flag=wx.EXPAND)
-        candidate_sizer.Add(panel1, 1, flag=wx.EXPAND)
+        candidate_sizer.Add(scroll1, 1, flag=wx.EXPAND)
         
         try_it_sizer = wx.BoxSizer(wx.VERTICAL)
         try_it_sizer.Add(try_it_label, 0, flag=wx.EXPAND)
-        try_it_sizer.Add(panel2, 1, flag=wx.EXPAND)
+        try_it_sizer.Add(scroll2, 1, flag=wx.EXPAND)
 
         panel_sizer = wx.GridSizer(rows=1, cols=2)
         panel_sizer.Add(candidate_sizer, 0, flag=wx.EXPAND)
@@ -47,12 +49,17 @@ class Panel(wx.Panel):
         self.Fit()
 
     def add_candidates(self):
-        """Add candidates."""
+        """Add candidate passwords."""
         self._candidates.extend([self._generator.next() for
                                  i in range(8)])
         self.candidate_text.Clear()
         self.candidate_text.AppendText('\n'.join(self._candidates))
 
+    def clear(self):
+        """Clear candidate passwords."""
+        self._candidates = []
+        self.candidate_text.Clear()
+        self.candidate_text.AppendText('\n'.join(self._candidates))
 
 class Frame(wx.Frame):
     """The main window for the application."""
@@ -91,7 +98,7 @@ class Frame(wx.Frame):
 
     def OnClear(self, event):
         """Respond to a clear request."""
-        print('{0}.OnClear() called'.format(self.__class__))
+        self.panel.clear()
 
     def OnCloseWindow(self, event):
         """Respond to closing this window."""
