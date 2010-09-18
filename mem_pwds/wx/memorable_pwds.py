@@ -5,61 +5,69 @@ import wx
 import mem_pwds.MemorablePwds
 
 
-class Panel(wx.Panel):
+window_size = (768, 480)
+
+
+class View(wx.ScrolledWindow):
     """The main panel for the application."""
 
     def __init__(self, parent):
         """Construct the instance."""
-        super(Panel, self).__init__(parent)
+        super(View, self).__init__(parent)
 
         self._candidates = []
         self._generator = mem_pwds.MemorablePwds.MemorablePwds()
 
-        # Create the interface.
-        text_window_size = (300, 300)
-        candidate_label = wx.StaticText(self, wx.ID_ANY,
-                                        'Candidate passwords:')
-        scroll1 = wx.ScrolledWindow(self, wx.ID_ANY)
-        scroll1.SetScrollbars(1, 1, text_window_size[0], text_window_size[1])
-        self.candidate_text = wx.TextCtrl(scroll1, size=text_window_size,
-                                          style=wx.TE_MULTILINE)
-        self.candidate_text.SetBackgroundColour('red')
+        self.SetScrollbars(1, 1, window_size[0], window_size[1])
 
-        try_it_label = wx.StaticText(self, wx.ID_ANY,
-                                     'Try it!')
-        scroll2 = wx.ScrolledWindow(self)
-        scroll2.SetScrollbars(1, 1, text_window_size[0], text_window_size[1])
-        sample_text = wx.TextCtrl(scroll2, size=text_window_size,
-                                  style=wx.TE_MULTILINE)
-        sample_text.SetBackgroundColour('green')
+        self.createWindows()
+        self.layoutWindows()
 
-        # Layout the interface.
-        candidate_sizer = wx.BoxSizer(wx.VERTICAL)
-        candidate_sizer.Add(candidate_label, 0, flag=wx.EXPAND)
-        candidate_sizer.Add(scroll1, 1, flag=wx.EXPAND)
-        
-        try_it_sizer = wx.BoxSizer(wx.VERTICAL)
-        try_it_sizer.Add(try_it_label, 0, flag=wx.EXPAND)
-        try_it_sizer.Add(scroll2, 1, flag=wx.EXPAND)
-
-        panel_sizer = wx.GridSizer(rows=1, cols=2)
-        panel_sizer.Add(candidate_sizer, 0, flag=wx.EXPAND)
-        panel_sizer.Add(try_it_sizer, 0, flag=wx.EXPAND)
-        self.SetSizer(panel_sizer)
+        self.SetSizer(self.view_sizer)
         self.Fit()
 
     def add_candidates(self):
         """Add candidate passwords."""
         self._candidates.extend([self._generator.next() for
                                  i in range(8)])
-        self.candidate_text.Clear()
-        self.candidate_text.AppendText('\n'.join(self._candidates))
+        self.candidate_view.Clear()
+        self.candidate_view.AppendText('\n'.join(self._candidates))
 
     def clear(self):
         """Clear candidate passwords."""
         self._candidates = []
-        self.candidate_text.Clear()
-        self.candidate_text.AppendText('\n'.join(self._candidates))
+        self.candidate_view.Clear()
+        self.candidate_view.AppendText('\n'.join(self._candidates))
+
+    def createWindows(self):
+        """Create the child windows of this Panel."""
+        self.candidate_label = wx.StaticText(self, wx.ID_ANY,
+                                             'Candidate passwords:')
+        self.candidate_view = wx.TextCtrl(self, size=(window_size[0] / 2,
+                                                      window_size[1]),
+                                          style=wx.TE_MULTILINE)
+        self.candidate_view.SetBackgroundColour('red')
+
+        self.try_it_label = wx.StaticText(self, wx.ID_ANY, "Try 'em!")
+        self.try_it_view = wx.TextCtrl(self, size=(window_size[0] / 2,
+                                                   window_size[1]),
+                                       style=wx.TE_MULTILINE)
+        self.try_it_view.SetBackgroundColour('green')
+
+    def layoutWindows(self):
+        """Layout the child indows of this Panel."""
+        candidate_sizer = wx.BoxSizer(wx.VERTICAL)
+        candidate_sizer.Add(self.candidate_label, 0, flag=wx.EXPAND)
+        candidate_sizer.Add(self.candidate_view, 1, flag=wx.EXPAND)
+
+        try_it_sizer = wx.BoxSizer(wx.VERTICAL)
+        try_it_sizer.Add(self.try_it_label, 0, flag=wx.EXPAND)
+        try_it_sizer.Add(self.try_it_view, 1, flag=wx.EXPAND)
+
+        self.view_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.view_sizer.Add(candidate_sizer, 1, flag=wx.EXPAND)
+        self.view_sizer.Add(try_it_sizer, 1, flag=wx.EXPAND)
+
 
 class Frame(wx.Frame):
     """The main window for the application."""
@@ -73,7 +81,7 @@ class Frame(wx.Frame):
         self.SetMenuBar(self.menu_bar)
         
         self.status_bar = self.CreateStatusBar()
-        self.panel = Panel(self)
+        self.view = View(self)
 
     def CreateMenuBar(self):
         """Create the menu bar."""
@@ -98,7 +106,7 @@ class Frame(wx.Frame):
 
     def OnClear(self, event):
         """Respond to a clear request."""
-        self.panel.clear()
+        self.view.clear()
 
     def OnCloseWindow(self, event):
         """Respond to closing this window."""
@@ -110,7 +118,7 @@ class Frame(wx.Frame):
 
     def OnGenerate(self, event):
         """Respond to a generate request."""
-        self.panel.add_candidates()
+        self.view.add_candidates()
 
 
 class App(wx.App):
@@ -125,7 +133,8 @@ class App(wx.App):
     def OnInit(self):
         """To be performed at application initialization."""
 
-        self.frame = Frame(parent=None, title='Memorable Passwords')
+        self.frame = Frame(parent=None, title='Memorable Passwords',
+                           size=window_size)
         self.frame.Show()
         self.SetTopWindow(self.frame)
         return True
