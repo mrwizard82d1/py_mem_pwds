@@ -1,0 +1,6 @@
+# Python binary files.
+*pyc
+
+# Emacs backup files.
+*~
+
