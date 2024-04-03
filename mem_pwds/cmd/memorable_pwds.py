@@ -27,17 +27,17 @@ class MemorablePwdsApp(cmd.Cmd):
         self._generator = MemorablePwds()
 
     def help_next(self):
-        print 'Generates the next password.'
+        print('Generates the next password.')
     def do_next(self, theCount):
-        print self._generator.next()
+        print(next(self._generator))
         
     def help_EOF(self):
-        print 'Quits the program.'
+        print('Quits the program.')
     def do_EOF(self, line):
         return True
         
     def help_exit(self):
-        print 'Quits the program.'
+        print('Quits the program.')
     def do_exit(self, line):
         if __name__ == '__main__':
             sys.exit()

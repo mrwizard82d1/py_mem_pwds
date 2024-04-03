@@ -18,8 +18,8 @@ import pp2e_laj.gui.tools.guimixin
 import pp2e_laj.gui.tools.guimaker
 import mem_pwds.MemorablePwds
 
-from Tkinter import *
-from ScrolledText import ScrolledText
+from tkinter import *
+from tkinter.scrolledtext import ScrolledText
 
 class MemorablePwdsApp(pp2e_laj.gui.tools.guimixin.GuiMixin,
                        pp2e_laj.gui.tools.guimaker.GuiMakerWindowMenu):
@@ -33,7 +33,7 @@ class MemorablePwdsApp(pp2e_laj.gui.tools.guimixin.GuiMixin,
     def generate(self):
         """Generates a set of candidate passwords."""
         for i in range(0, 8):
-            self._candidates.append(self._generator.next())
+            self._candidates.append(next(self._generator))
         self.refreshCandidates()
 
     def help(self):

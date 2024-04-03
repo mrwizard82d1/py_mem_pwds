@@ -28,7 +28,7 @@ class View(wx.ScrolledWindow):
 
     def add_candidates(self):
         """Add candidate passwords."""
-        self._candidates.extend([self._generator.next() for
+        self._candidates.extend([next(self._generator) for
                                  i in range(8)])
         self.candidate_view.Clear()
         self.candidate_view.AppendText('\n'.join(self._candidates))

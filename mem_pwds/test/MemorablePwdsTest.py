@@ -31,10 +31,10 @@ class MemorablePwdsTest(unittest.TestCase):
     def testFormat(self):
         "Verifies the format of the returned password."
         for i in range(0, 99):
-            theNextPwd = self._defaultGenerator.next()
-            self.failUnless(self.isValidFormat(theNextPwd),
+            theNextPwd = next(self._defaultGenerator)
+            self.assertTrue(self.isValidFormat(theNextPwd),
                             'Invalid default password format: %s' % theNextPwd)
-            self.failUnless(self.isStrongEnough(theNextPwd),
+            self.assertTrue(self.isStrongEnough(theNextPwd),
                             'Insufficiently strong password: %s' % theNextPwd)
 
 

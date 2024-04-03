@@ -18,7 +18,7 @@ class MemorablePwds:
     def __init__(self, theSeed = None):
         "Construct a generator for memorable and strong passwords."
         source = self.findDictionary()
-        self._words = map(string.strip, source.readlines())
+        self._words = list(map(str.strip, source.readlines()))
         random.seed(theSeed)
 
     def buildPassword(self):
@@ -91,7 +91,7 @@ class MemorablePwds:
         theMatcher = re.compile(thePattern)
         return theMatcher.match(theWord)
 
-    def next(self):
+    def __next__(self):
         "Return the next memorable but strong password."
         thePassword = self.buildPassword()
         while (not self.isStrongEnough(thePassword)):
